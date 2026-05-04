@@ -30,11 +30,11 @@ public class Gym {
 
     public Gym() {    }
 
-    public Gym(UUID id, String name, String phoneNumber, String country, String zipCode, String city, String address) {
+    public Gym(UUID id, String name, String phoneNumber, Address address) {
         this.id = id;
         this.name = name;
         this.phoneNumber = phoneNumber;
-        this.address = new Address(country, zipCode, city, address);
+        this.address = address;
     }
 
     public UUID getId() {
@@ -75,6 +75,10 @@ public class Gym {
 
     public void setMembershipPlans(List<MembershipPlan> membershipPlans) {
         this.membershipPlans = membershipPlans;
+    }
+
+    public void addMembershipPlan(MembershipPlan membershipPlan) {
+        this.membershipPlans.add(membershipPlan);
     }
 
     @Override

@@ -1,6 +1,7 @@
 package technical.task.gmms.entities;
 
 import jakarta.persistence.*;
+import technical.task.gmms.exceptions.MembershipCapacityExceededException;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -38,15 +39,14 @@ public class MembershipPlan {
 
     public MembershipPlan() {    }
 
-    public MembershipPlan(UUID id, String name, MembershipType type, BigDecimal monthlyPriceAmount, Currency monthlyPriceCurrency, Integer duration, Integer maxMembers, Gym gym, List<Member> members) {
+    public MembershipPlan(UUID id, String name, MembershipType type, Price monthlyPrice, Integer duration, Integer maxMembers, Gym gym) {
         this.id = id;
         this.name = name;
         this.type = type;
-        this.monthlyPrice = new Price(monthlyPriceAmount, monthlyPriceCurrency);
+        this.monthlyPrice = monthlyPrice;
         this.duration = duration;
         this.maxMembers = maxMembers;
         this.gym = gym;
-        this.members = members;
     }
 
     public UUID getId() {
@@ -93,7 +93,10 @@ public class MembershipPlan {
         return maxMembers;
     }
 
-    public void setMaxMembers(Integer maxMembers) {
+    public void setMaxMembers(Integer maxMembers) throws IllegalArgumentException{
+        if (members.size() > maxMembers)
+            throw new IllegalArgumentException("Cannot set max members to " + maxMembers +
+                    ", because there are already " + members.size() + " members.");
         this.maxMembers = maxMembers;
     }
 
@@ -111,6 +114,12 @@ public class MembershipPlan {
 
     public void setMembers(List<Member> members) {
         this.members = members;
+    }
+
+    public void addMember(Member member) throws MembershipCapacityExceededException {
+        if (members.size() >= maxMembers)
+            throw new MembershipCapacityExceededException("Membership plan has reached its maximum capacity of " + maxMembers);
+        members.add(member);
     }
 
     @Override
