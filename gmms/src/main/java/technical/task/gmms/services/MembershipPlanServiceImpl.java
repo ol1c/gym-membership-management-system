@@ -23,6 +23,7 @@ import java.util.UUID;
 public class MembershipPlanServiceImpl implements MembershipPlanService{
     @Autowired
     MembershipPlanRepository membershipPlanRepository;
+
     @PersistenceContext
     private EntityManager entityManager;
 
