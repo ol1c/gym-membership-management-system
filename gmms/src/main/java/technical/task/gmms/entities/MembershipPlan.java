@@ -1,6 +1,7 @@
 package technical.task.gmms.entities;
 
 import jakarta.persistence.*;
+import technical.task.gmms.exceptions.MembershipCapacityExceededException;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -110,6 +111,12 @@ public class MembershipPlan {
 
     public void setMembers(List<Member> members) {
         this.members = members;
+    }
+
+    public void addMember(Member member) throws MembershipCapacityExceededException {
+        if (members.size() >= maxMembers)
+            throw new MembershipCapacityExceededException("Membership plan has reached its maximum capacity of " + maxMembers);
+        members.add(member);
     }
 
     @Override
