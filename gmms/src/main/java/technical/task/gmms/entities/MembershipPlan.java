@@ -38,15 +38,14 @@ public class MembershipPlan {
 
     public MembershipPlan() {    }
 
-    public MembershipPlan(UUID id, String name, MembershipType type, BigDecimal monthlyPriceAmount, Currency monthlyPriceCurrency, Integer duration, Integer maxMembers, Gym gym, List<Member> members) {
+    public MembershipPlan(UUID id, String name, MembershipType type, Price monthlyPrice, Integer duration, Integer maxMembers, Gym gym) {
         this.id = id;
         this.name = name;
         this.type = type;
-        this.monthlyPrice = new Price(monthlyPriceAmount, monthlyPriceCurrency);
+        this.monthlyPrice = monthlyPrice;
         this.duration = duration;
         this.maxMembers = maxMembers;
         this.gym = gym;
-        this.members = members;
     }
 
     public UUID getId() {

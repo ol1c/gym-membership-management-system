@@ -77,6 +77,10 @@ public class Gym {
         this.membershipPlans = membershipPlans;
     }
 
+    public void addMembershipPlan(MembershipPlan membershipPlan) {
+        this.membershipPlans.add(membershipPlan);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof Gym gym)) return false;
