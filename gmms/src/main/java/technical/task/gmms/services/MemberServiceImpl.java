@@ -64,21 +64,28 @@ public class MemberServiceImpl implements MemberService{
     @Override
     public Member update(UUID id, String firstName, String secondName, String lastName, String email,
                          String country, String zipCode, String city, String address) throws NoSuchElementException {
-        return null;
+        Member member = memberRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("Member with id \" + id + \" not found"));
+        member.setFirstName(firstName);
+        member.setSecondName(secondName);
+        member.setLastName(lastName);
+        member.setEmail(email);
+        member.setAddress(new Address(country, zipCode, city, address));
+        return memberRepository.save(member);
     }
 
     @Override
     public List<Member> saveAll(Iterable<Member> members) {
-        return List.of();
+        return memberRepository.saveAll(members);
     }
 
     @Override
     public void delete(Member member) {
-
+        memberRepository.delete(member);
     }
 
     @Override
     public void deleteById(UUID id) {
-
+        memberRepository.deleteById(id);
     }
 }
