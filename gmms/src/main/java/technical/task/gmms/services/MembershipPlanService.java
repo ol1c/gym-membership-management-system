@@ -19,9 +19,11 @@ public interface MembershipPlanService {
 
     long count();
 
-    MembershipPlan create(String name, MembershipType type, BigDecimal monthlyPriceAmount, Currency monthlyPriceCurrency, Integer duration, Integer maxMembers, UUID gymId);
+    MembershipPlan create(String name, MembershipType type,
+                          BigDecimal monthlyPriceAmount, Currency monthlyPriceCurrency, Integer duration, Integer maxMembers, UUID gymId);
 
-    MembershipPlan update(UUID id, String name, MembershipType type, BigDecimal monthlyPriceAmount, Currency monthlyPriceCurrency, Integer duration, Integer maxMembers) throws NoSuchElementException;
+    MembershipPlan update(UUID id, String name, MembershipType type,
+                          BigDecimal monthlyPriceAmount, Currency monthlyPriceCurrency, Integer duration, Integer maxMembers) throws NoSuchElementException;
 
     List<MembershipPlan> saveAll(Iterable<MembershipPlan> membershipPlans);
 

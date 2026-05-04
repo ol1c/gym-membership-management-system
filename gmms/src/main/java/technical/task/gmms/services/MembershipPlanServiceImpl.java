@@ -49,7 +49,8 @@ public class MembershipPlanServiceImpl implements MembershipPlanService{
     }
 
     @Override
-    public MembershipPlan create(String name, MembershipType type, BigDecimal monthlyPriceAmount, Currency monthlyPriceCurrency, Integer duration, Integer maxMembers, UUID gymId) {
+    public MembershipPlan create(String name, MembershipType type,
+                                 BigDecimal monthlyPriceAmount, Currency monthlyPriceCurrency, Integer duration, Integer maxMembers, UUID gymId) {
         Gym gymRef = entityManager.getReference(Gym.class, gymId);
         MembershipPlan membershipPlan = new MembershipPlan(UUID.randomUUID(),
                 name,
@@ -63,7 +64,8 @@ public class MembershipPlanServiceImpl implements MembershipPlanService{
     }
 
     @Override
-    public MembershipPlan update(UUID id, String name, MembershipType type, BigDecimal monthlyPriceAmount, Currency monthlyPriceCurrency, Integer duration, Integer maxMembers) throws NoSuchElementException {
+    public MembershipPlan update(UUID id, String name, MembershipType type,
+                                 BigDecimal monthlyPriceAmount, Currency monthlyPriceCurrency, Integer duration, Integer maxMembers) throws NoSuchElementException {
         MembershipPlan membershipPlan = membershipPlanRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Membership plan with id "+ id + " not found"));
         membershipPlan.setName(name);
