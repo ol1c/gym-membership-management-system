@@ -12,7 +12,7 @@ public interface GymService {
 
     Gym findById(UUID id) throws EntityNotFoundException;
 
-    boolean exisitById(UUID id);
+    boolean existById(UUID id);
 
     long count();
 
