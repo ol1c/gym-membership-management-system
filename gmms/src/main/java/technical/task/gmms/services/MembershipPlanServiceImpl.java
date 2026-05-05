@@ -72,7 +72,7 @@ public class MembershipPlanServiceImpl implements MembershipPlanService{
     public MembershipPlan update(UUID id, String name, MembershipType type,
                                  BigDecimal monthlyPriceAmount, Currency monthlyPriceCurrency, Integer duration, Integer maxMembers) throws NoSuchElementException, IllegalArgumentException {
         MembershipPlan membershipPlan = membershipPlanRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Membership plan with id "+ id + " not found"));
+                .orElseThrow(() -> new NoSuchElementException("Membership plan with id "+ id + " not found"));
         membershipPlan.setName(name);
         membershipPlan.setType(type);
         membershipPlan.setMonthlyPrice(new Price(monthlyPriceAmount, monthlyPriceCurrency));
