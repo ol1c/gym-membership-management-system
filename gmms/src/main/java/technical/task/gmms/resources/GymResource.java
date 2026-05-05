@@ -2,11 +2,9 @@ package technical.task.gmms.resources;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import technical.task.gmms.dto.GymRequest;
 import technical.task.gmms.dto.GymResponse;
-import technical.task.gmms.entities.Gym;
 import technical.task.gmms.services.GymService;
 
 import java.util.List;
