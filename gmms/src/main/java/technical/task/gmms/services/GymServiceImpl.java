@@ -41,10 +41,12 @@ public class GymServiceImpl implements GymService{
 
     @Override
     public Gym create(String name, String phoneNumber, String country, String zipCode, String city, String address) {
-        Gym gym = new Gym(UUID.randomUUID(),
+        Gym gym = new Gym(
+                UUID.randomUUID(),
                 name,
                 phoneNumber,
-                new Address(country, zipCode, city, address));
+                new Address(country, zipCode, city, address)
+        );
         return gymRepository.save(gym);
     }
 

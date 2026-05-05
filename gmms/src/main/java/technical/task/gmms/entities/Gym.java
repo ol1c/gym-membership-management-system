@@ -19,6 +19,7 @@ public class Gym {
     @Column(nullable = false)
     private String phoneNumber;
 
+    @Embedded
     private Address address;
 
     @OneToMany(

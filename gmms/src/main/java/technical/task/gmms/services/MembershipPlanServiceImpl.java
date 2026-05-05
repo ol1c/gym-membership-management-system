@@ -6,10 +6,7 @@ import jakarta.persistence.PersistenceContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import technical.task.gmms.entities.Gym;
-import technical.task.gmms.entities.MembershipPlan;
-import technical.task.gmms.entities.MembershipType;
-import technical.task.gmms.entities.Price;
+import technical.task.gmms.entities.*;
 import technical.task.gmms.repositories.MembershipPlanRepository;
 
 import java.math.BigDecimal;
@@ -57,20 +54,22 @@ public class MembershipPlanServiceImpl implements MembershipPlanService{
     public MembershipPlan create(String name, MembershipType type,
                                  BigDecimal monthlyPriceAmount, Currency monthlyPriceCurrency, Integer duration, Integer maxMembers, UUID gymId) {
         Gym gymRef = entityManager.getReference(Gym.class, gymId);
-        MembershipPlan membershipPlan = new MembershipPlan(UUID.randomUUID(),
+        MembershipPlan membershipPlan = new MembershipPlan(
+                UUID.randomUUID(),
                 name,
                 type,
                 new Price(monthlyPriceAmount, monthlyPriceCurrency),
                 duration,
                 maxMembers,
-                gymRef);
-        gymRef.addMembershipPlan(membershipPlan);
+                gymRef
+        );
         return membershipPlanRepository.save(membershipPlan);
     }
 
     @Override
     public MembershipPlan update(UUID id, String name, MembershipType type,
-                                 BigDecimal monthlyPriceAmount, Currency monthlyPriceCurrency, Integer duration, Integer maxMembers) throws NoSuchElementException, IllegalArgumentException {
+                                 BigDecimal monthlyPriceAmount, Currency monthlyPriceCurrency,
+                                 Integer duration, Integer maxMembers) throws NoSuchElementException, IllegalArgumentException {
         MembershipPlan membershipPlan = membershipPlanRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Membership plan with id "+ id + " not found"));
         membershipPlan.setName(name);

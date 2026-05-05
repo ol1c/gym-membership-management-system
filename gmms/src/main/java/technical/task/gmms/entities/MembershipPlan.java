@@ -12,9 +12,10 @@ public class MembershipPlan {
     @Id
     private UUID id;
 
-    @Column(name = "membership_name")
+    @Column(name = "membership_name", nullable = false)
     private String name;
 
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private MembershipType type;
 

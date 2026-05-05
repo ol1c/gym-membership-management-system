@@ -3,6 +3,7 @@ package technical.task.gmms.resources;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import jakarta.validation.Valid;
 import technical.task.gmms.dto.GymRequest;
 import technical.task.gmms.dto.GymResponse;
 import technical.task.gmms.services.GymService;
@@ -26,7 +27,7 @@ public class GymResource {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public GymResponse createGym(@RequestBody GymRequest gym) {
+    public GymResponse createGym(@Valid @RequestBody GymRequest gym) {
         return new GymResponse(gymService.create(
                 gym.getName(),
                 gym.getPhoneNumber(),
@@ -47,7 +48,7 @@ public class GymResource {
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public GymResponse updateGym(@PathVariable UUID id, @RequestBody GymRequest gym) {
+    public GymResponse updateGym(@PathVariable UUID id, @Valid @RequestBody GymRequest gym) {
         return new GymResponse(gymService.update(
                 id,
                 gym.getName(),

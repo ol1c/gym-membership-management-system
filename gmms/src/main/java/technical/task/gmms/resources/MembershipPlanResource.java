@@ -1,5 +1,6 @@
 package technical.task.gmms.resources;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -11,7 +12,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/mebership-plans")
+@RequestMapping("/api/membership-plans")
 public class MembershipPlanResource {
     @Autowired
     private MembershipPlanService membershipPlanService;
@@ -33,7 +34,7 @@ public class MembershipPlanResource {
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public MembershipPlanResponse updateMembershipPlan(@PathVariable UUID id, @RequestBody MembershipPlanRequest membershipPlan) {
+    public MembershipPlanResponse updateMembershipPlan(@PathVariable UUID id, @Valid @RequestBody MembershipPlanRequest membershipPlan) {
         return new MembershipPlanResponse(membershipPlanService.update(
                 id,
                 membershipPlan.getName(),
@@ -63,7 +64,7 @@ public class MembershipPlanResource {
     @PostMapping("/gyms/{gymId}")
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public MembershipPlanResponse createMembershipPlan(@PathVariable UUID gymId, @RequestBody MembershipPlanRequest membershipPlan) {
+    public MembershipPlanResponse createMembershipPlan(@PathVariable UUID gymId, @Valid @RequestBody MembershipPlanRequest membershipPlan) {
         return new MembershipPlanResponse(membershipPlanService.create(
                 membershipPlan.getName(),
                 membershipPlan.getType(),
