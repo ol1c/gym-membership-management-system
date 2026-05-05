@@ -16,7 +16,7 @@ public class Gym {
     @Column(unique = true, nullable = false)
     private String name;
 
-    @Column(name = "phone_number", nullable = false)
+    @Column(nullable = false)
     private String phoneNumber;
 
     private Address address;
