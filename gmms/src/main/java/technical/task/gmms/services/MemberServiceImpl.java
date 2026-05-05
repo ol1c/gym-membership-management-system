@@ -31,13 +31,18 @@ public class MemberServiceImpl implements MemberService{
     }
 
     @Override
+    public List<Member> findAllByMembershipPlanId(UUID membershipPlanId) {
+        return memberRepository.findAllByMembershipId(membershipPlanId);
+    }
+
+    @Override
     public Member findById(UUID id) throws EntityNotFoundException {
         return memberRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Member with id " + id + " not found"));
     }
 
     @Override
-    public boolean exisitById(UUID id) {
+    public boolean existById(UUID id) {
         return memberRepository.existsById(id);
     }
 
