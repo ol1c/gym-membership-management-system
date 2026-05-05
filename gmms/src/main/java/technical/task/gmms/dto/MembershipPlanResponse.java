@@ -1,6 +1,7 @@
 package technical.task.gmms.dto;
 
 import technical.task.gmms.entities.MembershipPlan;
+import technical.task.gmms.entities.MembershipType;
 
 import java.util.Objects;
 import java.util.UUID;
@@ -8,7 +9,7 @@ import java.util.UUID;
 public class MembershipPlanResponse {
     private UUID id;
     private String name;
-    private String type;
+    private MembershipType type;
     private String monthlyPrice;
     private Integer duration;
     private Integer maxMembers;
@@ -20,7 +21,7 @@ public class MembershipPlanResponse {
     public MembershipPlanResponse(MembershipPlan membershipPlan) {
         this.id = membershipPlan.getId();
         this.name = membershipPlan.getName();
-        this.type = membershipPlan.getType().toString();
+        this.type = membershipPlan.getType();
         this.monthlyPrice = membershipPlan.getMonthlyPrice().toString();
         this.duration = membershipPlan.getDuration();
         this.maxMembers = membershipPlan.getMaxMembers();
@@ -43,11 +44,11 @@ public class MembershipPlanResponse {
         this.name = name;
     }
 
-    public String getType() {
+    public MembershipType getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(MembershipType type) {
         this.type = type;
     }
 
