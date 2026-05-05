@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import technical.task.gmms.entities.Address;
 import technical.task.gmms.entities.Member;
 import technical.task.gmms.entities.MembershipPlan;
+import technical.task.gmms.entities.MembershipStatus;
 import technical.task.gmms.exceptions.MembershipCapacityExceededException;
 import technical.task.gmms.repositories.MemberRepository;
 
@@ -55,14 +56,15 @@ public class MemberServiceImpl implements MemberService{
     public Member create(String firstName, String secondName, String lastName, String email, String country,
                          String zipCode, String city, String address, UUID membershipPlanId) throws MembershipCapacityExceededException {
         MembershipPlan membershipPlan = entityManager.getReference(MembershipPlan.class, membershipPlanId);
-        Member member = new Member(UUID.randomUUID(),
+        Member member = new Member(
+                UUID.randomUUID(),
                 firstName,
                 secondName,
                 lastName,
                 email,
                 new Address(country, zipCode, city, address),
-                membershipPlan);
-        membershipPlan.addMember(member);
+                membershipPlan
+        );
         return memberRepository.save(member);
     }
 
@@ -76,6 +78,14 @@ public class MemberServiceImpl implements MemberService{
         member.setLastName(lastName);
         member.setEmail(email);
         member.setAddress(new Address(country, zipCode, city, address));
+        return memberRepository.save(member);
+    }
+
+    @Override
+    public Member cancelMembershipById(UUID id) throws NoSuchElementException {
+        Member member = memberRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("Member with id \" + id + \" not found"));
+        member.setStatus(MembershipStatus.CANCELLED);
         return memberRepository.save(member);
     }
 

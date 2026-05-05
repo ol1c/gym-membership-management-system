@@ -2,6 +2,7 @@ package technical.task.gmms.services;
 
 import jakarta.persistence.EntityNotFoundException;
 import technical.task.gmms.entities.MembershipPlan;
+import technical.task.gmms.entities.MembershipStatus;
 import technical.task.gmms.entities.MembershipType;
 
 import java.math.BigDecimal;
@@ -25,7 +26,8 @@ public interface MembershipPlanService {
                           BigDecimal monthlyPriceAmount, Currency monthlyPriceCurrency, Integer duration, Integer maxMembers, UUID gymId);
 
     MembershipPlan update(UUID id, String name, MembershipType type,
-                          BigDecimal monthlyPriceAmount, Currency monthlyPriceCurrency, Integer duration, Integer maxMembers) throws NoSuchElementException;
+                          BigDecimal monthlyPriceAmount, Currency monthlyPriceCurrency,
+                          Integer duration, Integer maxMembers) throws NoSuchElementException;
 
     List<MembershipPlan> saveAll(Iterable<MembershipPlan> membershipPlans);
 

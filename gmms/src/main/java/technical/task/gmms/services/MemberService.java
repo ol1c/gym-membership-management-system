@@ -30,6 +30,8 @@ public interface MemberService {
     Member update(UUID id, String firstName, String secondName, String lastName, String email,
                   String country, String zipCode, String city, String address) throws NoSuchElementException;
 
+    Member cancelMembershipById(UUID id) throws NoSuchElementException;
+
     List<Member> saveAll(Iterable<Member> members);
 
     void delete(Member member);
