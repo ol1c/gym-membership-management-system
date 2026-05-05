@@ -10,7 +10,6 @@ public class MemberRequest {
     @NotBlank
     private String firstName;
 
-    @NotBlank
     private String secondName;
 
     @NotBlank

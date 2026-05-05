@@ -5,6 +5,7 @@ import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
+import technical.task.gmms.entities.MembershipStatus;
 import technical.task.gmms.entities.MembershipType;
 
 import java.math.BigDecimal;
@@ -20,16 +21,18 @@ public class MembershipPlanRequest {
 
     @NotNull
     @Positive
-    @Digits(integer = 10, fraction = 2)
+    @Digits(integer = 8, fraction = 2)
     private BigDecimal monthlyPriceAmount;
 
     @NotNull
     private Currency monthlyPriceCurrency;
 
     @NotNull
+    @Positive
     private Integer duration;
 
     @NotNull
+    @Positive
     private Integer maxMembers;
 
     public MembershipPlanRequest() {    }
