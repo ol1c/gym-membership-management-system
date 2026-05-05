@@ -13,6 +13,8 @@ import java.util.UUID;
 public interface MembershipPlanService {
     List<MembershipPlan> findAll();
 
+    List<MembershipPlan> findAllByGymId(UUID gymId);
+
     MembershipPlan findById(UUID id) throws EntityNotFoundException;
 
     boolean exisitById(UUID id);
