@@ -9,10 +9,10 @@ import java.util.Objects;
 
 @Embeddable
 public class Price {
-    @Column(name = "price_amount", precision = 10, scale = 2)
+    @Column(name = "price_amount", precision = 10, scale = 2, nullable = false)
     private BigDecimal amount;
 
-    @Column(name = "price_currency", length = 3)
+    @Column(name = "price_currency", length = 3, nullable = false)
     private Currency currency;
 
     protected Price() {}
