@@ -1,5 +1,6 @@
 package technical.task.gmms.resources;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -33,7 +34,7 @@ public class MemberResource {
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public MemberResponse updateMember(@PathVariable UUID id, @RequestBody MemberRequest member) {
+    public MemberResponse updateMember(@PathVariable UUID id, @Valid @RequestBody MemberRequest member) {
         return new MemberResponse(memberService.update(
                 id,
                 member.getFirstName(),
@@ -45,6 +46,13 @@ public class MemberResource {
                 member.getCity(),
                 member.getAddress()
         ));
+    }
+
+    @PatchMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public MemberResponse cancelMembershipByMemberId(@PathVariable UUID id) {
+        return new MemberResponse(memberService.cancelMembershipById(id));
     }
 
     @DeleteMapping("/{id}")
@@ -64,7 +72,7 @@ public class MemberResource {
     @PostMapping("/membership-plans/{membershipPlanId}")
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public MemberResponse createMember(@PathVariable UUID membershipPlanId, @RequestBody MemberRequest member) {
+    public MemberResponse createMember(@PathVariable UUID membershipPlanId, @Valid @RequestBody MemberRequest member) {
         return new MemberResponse(memberService.create(
                 member.getFirstName(),
                 member.getSecondName(),
