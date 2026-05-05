@@ -1,6 +1,10 @@
 package technical.task.gmms.dto;
 
 import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.validation.constraints.Digits;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import technical.task.gmms.entities.MembershipType;
 
 import java.math.BigDecimal;
@@ -8,11 +12,24 @@ import java.util.Currency;
 import java.util.Objects;
 
 public class MembershipPlanRequest {
+    @NotBlank
     private String name;
+
+    @NotNull
     private MembershipType type;
+
+    @NotNull
+    @Positive
+    @Digits(integer = 10, fraction = 2)
     private BigDecimal monthlyPriceAmount;
+
+    @NotNull
     private Currency monthlyPriceCurrency;
+
+    @NotNull
     private Integer duration;
+
+    @NotNull
     private Integer maxMembers;
 
     public MembershipPlanRequest() {    }
