@@ -61,7 +61,7 @@ public class MembershipPlanResource {
     }
 
     @PostMapping("/gyms/{gymId}")
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
     public MembershipPlanResponse createMembershipPlan(@PathVariable UUID gymId, @RequestBody MembershipPlanRequest membershipPlan) {
         return new MembershipPlanResponse(membershipPlanService.create(
