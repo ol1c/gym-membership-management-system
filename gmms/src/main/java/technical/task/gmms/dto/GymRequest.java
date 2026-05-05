@@ -1,6 +1,7 @@
 package technical.task.gmms.dto;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 
 import java.util.Objects;
 
@@ -15,6 +16,7 @@ public class GymRequest {
     private String country;
 
     @NotBlank
+    @Pattern(regexp = "^\\d{2}-\\d{3}$")
     private String zipCode;
 
     @NotBlank
