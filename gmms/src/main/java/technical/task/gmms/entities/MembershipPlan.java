@@ -24,7 +24,7 @@ public class MembershipPlan {
     @Column(nullable = false)
     private Integer duration;
 
-    @Column(name = "max_members", nullable = false)
+    @Column(nullable = false)
     private Integer maxMembers;
 
     @ManyToOne

@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import java.util.Objects;
 import java.util.UUID;
 
+@Entity
+@Table(name="members")
 public class Member {
     @Id
     private UUID id;
