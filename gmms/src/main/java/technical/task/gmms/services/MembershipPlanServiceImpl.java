@@ -33,6 +33,11 @@ public class MembershipPlanServiceImpl implements MembershipPlanService{
     }
 
     @Override
+    public List<MembershipPlan> findAllByGymId(UUID gymId) {
+        return membershipPlanRepository.findAllByGymId(gymId);
+    }
+
+    @Override
     public MembershipPlan findById(UUID id) throws EntityNotFoundException {
         return membershipPlanRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Membership with id " + id + " not found"));

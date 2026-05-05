@@ -30,7 +30,7 @@ public class GymServiceImpl implements GymService{
     }
 
     @Override
-    public boolean exisitById(UUID id) {
+    public boolean existById(UUID id) {
         return gymRepository.existsById(id);
     }
 

@@ -16,9 +16,11 @@ import java.util.UUID;
 public interface MemberService {
     List<Member> findAll();
 
+    List<Member> findAllByMembershipPlanId(UUID membershipPlanId);
+
     Member findById(UUID id) throws EntityNotFoundException;
 
-    boolean exisitById(UUID id);
+    boolean existById(UUID id);
 
     long count();
 
