@@ -1,0 +1,73 @@
+@host = http://localhost:8080
+
+### 1) Create a new gym
+# @name createGym
+POST {{host}}/api/gyms
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "FitCenter",
+  "phoneNumber": "123 456 789",
+  "country": "Poland",
+  "zipCode": "80-400",
+  "city": "Gdańsk",
+  "address": "Street 1"
+}
+
+###
+@gymId = {{createGym.response.body.id}}
+
+### 2) List all gyms
+GET {{host}}/api/gyms
+Accept: application/json
+
+### 3) Create a new membership plan for a given gym
+# @name createMembershipPlan
+POST {{host}}/api/membership-plans/gyms/{{gymId}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "PLAN 1",
+  "type": "BASIC",
+  "monthlyPriceAmount": "99.99",
+  "monthlyPriceCurrency": "PLN",
+  "duration": "12",
+  "maxMembers": "1"
+}
+
+###
+@membershipPlanId = {{createMembershipPlan.response.body.id}}
+
+### 4) List all membership plans for a given gym
+GET {{host}}/api/membership-plans/gyms/{{gymId}}
+Accept: application/json
+
+### 5) Register a new member to a given membership plan (validate capacity)
+# @name createMember
+POST {{host}}/api/members/membership-plans/{{membershipPlanId}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "firstName": "Jan",
+  "secondName": "",
+  "lastName": "Kowalski",
+  "email": "jan.kowalski@example.com",
+  "country": "Poland",
+  "zipCode": "80-400",
+  "city": "Gdańsk",
+  "address": "Street 10"
+}
+
+###
+@memberId = {{createMember.response.body.id}}
+
+### 6) List all members - include the plan name, gym name and status
+GET {{host}}/api/members
+Accept: application/json
+
+### 7) Cancel a membership
+PATCH  {{host}}/api/members/{{memberId}}
+Accept: application/json
