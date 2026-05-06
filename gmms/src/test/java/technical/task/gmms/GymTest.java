@@ -74,6 +74,36 @@ class GymTest {
     }
 
     @Test
+    void getListOfGyms() throws Exception {
+        // Create new gym
+        GymRequest createRequest = new GymRequest(
+                "Gym",
+                "123456789",
+                "Poland",
+                "00-000",
+                "Warsaw",
+                "Street 1"
+        );
+        MvcResult postResult = mockMvc.perform(post("/api/gyms")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(createRequest)))
+                .andExpect(status().isCreated())
+                .andReturn();
+
+        String savedGymId = objectMapper.readTree(postResult.getResponse().getContentAsString()).path("id").asText();
+
+        assertThat(gymRepository.count()).isEqualTo(1);
+
+        // Try to get list of gyms
+        // List should be a JSON array with first element id == savedGymId
+        mockMvc.perform(get("/api/gyms"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$[0].id").value(savedGymId));
+    }
+
+    @Test
     void createGymWithInvalidZipCode() throws Exception {
         GymRequest invalidRequest = new GymRequest(
                 "Gym",
@@ -271,6 +301,53 @@ class GymTest {
         mockMvc.perform(put("/api/gyms/{id}", savedGymId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(updateRequest)))
+                .andExpect(status().isBadRequest());
+
+        assertThat(gymRepository.count()).isEqualTo(0);
+    }
+
+    @Test
+    void deleteExistingGym() throws Exception {
+        // Create new gym
+        GymRequest createRequest = new GymRequest(
+                "Gym",
+                "123456789",
+                "Poland",
+                "00-000",
+                "Warsaw",
+                "Street 1"
+        );
+        MvcResult postResult = mockMvc.perform(post("/api/gyms")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(createRequest)))
+                .andExpect(status().isCreated())
+                .andReturn();
+
+        String savedGymId = objectMapper.readTree(postResult.getResponse().getContentAsString()).path("id").asText();
+
+        assertThat(gymRepository.count()).isEqualTo(1);
+
+        // Try to delete the gym
+        mockMvc.perform(delete("/api/gyms/{id}", savedGymId))
+                .andExpect(status().isNoContent());
+
+        assertThat(gymRepository.count()).isEqualTo(0);
+    }
+
+    @Test
+    void deleteNonExistingGym() throws Exception {
+        String savedGymId = "nonExistingGym";
+
+        // Try to delete the non-existing gym
+        GymRequest updateRequest = new GymRequest(
+                "New Gym",
+                "123456789",
+                "Poland",
+                "00-000",
+                "Warsaw",
+                "Street 1"
+        );
+        mockMvc.perform(delete("/api/gyms/{id}", savedGymId))
                 .andExpect(status().isBadRequest());
 
         assertThat(gymRepository.count()).isEqualTo(0);
