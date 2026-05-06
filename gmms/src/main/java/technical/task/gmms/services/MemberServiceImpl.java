@@ -65,7 +65,8 @@ public class MemberServiceImpl implements MemberService{
                 new Address(country, zipCode, city, address),
                 membershipPlan
         );
-        return memberRepository.save(member);
+        membershipPlan.addMember(member);
+        return member;
     }
 
     @Override
