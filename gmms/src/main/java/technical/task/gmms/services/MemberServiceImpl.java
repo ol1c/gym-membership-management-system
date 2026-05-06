@@ -55,6 +55,9 @@ public class MemberServiceImpl implements MemberService{
     @Override
     public Member create(String firstName, String secondName, String lastName, String email, String country,
                          String zipCode, String city, String address, UUID membershipPlanId) throws MembershipCapacityExceededException {
+        if (memberRepository.existsByEmail(email)) {
+            throw new IllegalArgumentException("Member with this email already exist");
+        }
         MembershipPlan membershipPlan = entityManager.getReference(MembershipPlan.class, membershipPlanId);
         Member member = new Member(
                 UUID.randomUUID(),
@@ -65,7 +68,8 @@ public class MemberServiceImpl implements MemberService{
                 new Address(country, zipCode, city, address),
                 membershipPlan
         );
-        return memberRepository.save(member);
+        membershipPlan.addMember(member);
+        return member;
     }
 
     @Override
