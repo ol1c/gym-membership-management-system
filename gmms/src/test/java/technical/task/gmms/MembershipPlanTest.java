@@ -95,4 +95,40 @@ class MembershipPlanTest {
                 .andExpect(jsonPath("$.maxMembers").value(1))
                 .andExpect(jsonPath("$.gymId").value(gymId.toString()));
     }
+
+    @Test
+    void getMembershipPlanList() throws Exception {
+        MembershipPlanRequest request = new MembershipPlanRequest(
+                "Plan",
+                MembershipType.BASIC,
+                new BigDecimal("99.99"),
+                Currency.getInstance("PLN"),
+                12,
+                1);
+
+        // Creating new membership plan
+        MvcResult postResult = mockMvc.perform(post("/api/membership-plans/gyms/{gymId}", gymId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isCreated())
+                .andReturn();
+
+        String responseBody = postResult.getResponse().getContentAsString();
+        JsonNode root = objectMapper.readTree(responseBody);
+        String savedMembershipPlanId = root.path("id").asText();
+
+        assertThat(membershipPlanRepository.count()).isEqualTo(1);
+
+        // Getting a gym entity with id = savedGymId
+        mockMvc.perform(get("/api/membership-plans/{id}", savedMembershipPlanId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(savedMembershipPlanId))
+                .andExpect(jsonPath("$.name").value("Plan"))
+                .andExpect(jsonPath("$.type").value(MembershipType.BASIC.toString()))
+                .andExpect(jsonPath("$.monthlyPrice").value("99.99 PLN"))
+                .andExpect(jsonPath("$.duration").value(12))
+                .andExpect(jsonPath("$.maxMembers").value(1))
+                .andExpect(jsonPath("$.gymId").value(gymId.toString()));
+    }
 }

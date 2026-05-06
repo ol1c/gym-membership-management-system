@@ -74,7 +74,7 @@ class GymTest {
     }
 
     @Test
-    void getListOfGyms() throws Exception {
+    void getAllGyms() throws Exception {
         // Create new gym
         GymRequest createRequest = new GymRequest(
                 "Gym",
