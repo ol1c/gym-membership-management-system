@@ -343,7 +343,7 @@ class GymTest {
                 .andExpect(jsonPath("$.country").value("Poland"))
                 .andExpect(jsonPath("$.zipCode").value("00-000"))
                 .andExpect(jsonPath("$.city").value("Warsaw"))
-                .andExpect(jsonPath("$.address").value("Street 1"));;
+                .andExpect(jsonPath("$.address").value("Street 1"));
 
         assertThat(gymRepository.count()).isEqualTo(1);
     }
