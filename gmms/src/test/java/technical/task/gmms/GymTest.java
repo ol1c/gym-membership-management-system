@@ -104,6 +104,44 @@ class GymTest {
     }
 
     @Test
+    void createGymsWithSameName() throws Exception {
+        GymRequest request = new GymRequest(
+                "Gym",
+                "123456789",
+                "Poland",
+                "00-000",
+                "Warsaw",
+                "Street 1"
+        );
+
+        // Attempt to create a gym
+        mockMvc.perform(post("/api/gyms")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isCreated())
+                .andReturn();
+
+        assertThat(gymRepository.count()).isEqualTo(1);
+
+        GymRequest invalidRequest = new GymRequest(
+                "Gym",
+                "123456789",
+                "Poland",
+                "00-000",
+                "Warsaw",
+                "Street 2"
+        );
+
+        // Attempt to create a gym with the same name
+        mockMvc.perform(post("/api/gyms")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(invalidRequest)))
+                .andExpect(status().isBadRequest());
+
+        assertThat(gymRepository.count()).isEqualTo(1);
+    }
+
+    @Test
     void createGymWithInvalidZipCode() throws Exception {
         GymRequest invalidRequest = new GymRequest(
                 "Gym",

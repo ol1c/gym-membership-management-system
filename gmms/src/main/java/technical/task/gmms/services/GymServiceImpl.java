@@ -41,6 +41,9 @@ public class GymServiceImpl implements GymService{
 
     @Override
     public Gym create(String name, String phoneNumber, String country, String zipCode, String city, String address) {
+        if (gymRepository.existsByName(name)) {
+            throw new IllegalArgumentException("Gym with this name already exist");
+        }
         Gym gym = new Gym(
                 UUID.randomUUID(),
                 name,
