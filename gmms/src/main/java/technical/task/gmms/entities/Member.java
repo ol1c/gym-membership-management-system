@@ -1,7 +1,9 @@
 package technical.task.gmms.entities;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
 
+import java.time.LocalDate;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -27,6 +29,10 @@ public class Member {
 
     @ManyToOne
     private MembershipPlan membership;
+
+    @CreationTimestamp
+    @Column(updatable = false)
+    private LocalDate startDate;
 
     @Enumerated(EnumType.STRING)
     private MembershipStatus status = MembershipStatus.ACTIVE;
@@ -100,6 +106,14 @@ public class Member {
         this.membership = membership;
     }
 
+    public LocalDate getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(LocalDate startDate) {
+        this.startDate = startDate;
+    }
+
     public MembershipStatus getStatus() {
         return status;
     }
@@ -111,12 +125,12 @@ public class Member {
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof Member member)) return false;
-        return Objects.equals(getId(), member.getId()) && Objects.equals(getFirstName(), member.getFirstName()) && Objects.equals(getSecondName(), member.getSecondName()) && Objects.equals(getLastName(), member.getLastName()) && Objects.equals(getEmail(), member.getEmail()) && Objects.equals(getAddress(), member.getAddress()) && Objects.equals(getMembership(), member.getMembership()) && getStatus() == member.getStatus();
+        return Objects.equals(getId(), member.getId()) && Objects.equals(getFirstName(), member.getFirstName()) && Objects.equals(getSecondName(), member.getSecondName()) && Objects.equals(getLastName(), member.getLastName()) && Objects.equals(getEmail(), member.getEmail()) && Objects.equals(getAddress(), member.getAddress()) && Objects.equals(getMembership(), member.getMembership()) && Objects.equals(getStartDate(), member.getStartDate()) && getStatus() == member.getStatus();
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getFirstName(), getSecondName(), getLastName(), getEmail(), getAddress(), getMembership(), getStatus());
+        return Objects.hash(getId(), getFirstName(), getSecondName(), getLastName(), getEmail(), getAddress(), getMembership(), getStartDate(), getStatus());
     }
 
     @Override
@@ -129,6 +143,7 @@ public class Member {
                 ", email='" + email + '\'' +
                 ", address=" + address +
                 ", membership=" + membership +
+                ", startDate=" + startDate +
                 ", status=" + status +
                 '}';
     }
