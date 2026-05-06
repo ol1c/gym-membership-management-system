@@ -268,6 +268,138 @@ class MembershipPlanTest {
     }
 
     @Test
+    void createMembershipPlanWithEmptyName() throws Exception {
+        String invalidJsonRequest = """
+            {
+                "name": "",
+                "type": "BASIC",
+                "monthlyPriceAmount": 99.99,
+                "monthlyPriceCurrency": "PLN",
+                "duration": 12,
+                "maxMembers": 1
+            }
+            """;
+
+        // Attempt to create a membership plan with invalid max members
+        mockMvc.perform(post("/api/membership-plans/gyms/{gymId}", gymId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(invalidJsonRequest))
+                .andExpect(status().isBadRequest());
+
+        assertThat(membershipPlanRepository.count()).isEqualTo(0);
+    }
+
+    @Test
+    void createMembershipPlanWithEmptyType() throws Exception {
+        String invalidJsonRequest = """
+            {
+                "name": "Plan",
+                "type": "",
+                "monthlyPriceAmount": 99.99,
+                "monthlyPriceCurrency": "PLN",
+                "duration": 12,
+                "maxMembers": 1
+            }
+            """;
+
+        // Attempt to create a membership plan with invalid max members
+        mockMvc.perform(post("/api/membership-plans/gyms/{gymId}", gymId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(invalidJsonRequest))
+                .andExpect(status().isBadRequest());
+
+        assertThat(membershipPlanRepository.count()).isEqualTo(0);
+    }
+
+    @Test
+    void createMembershipPlanWithEmptyMonthlyPriceAmount() throws Exception {
+        String invalidJsonRequest = """
+            {
+                "name": "Plan",
+                "type": "BASIC",
+                "monthlyPriceAmount": ,
+                "monthlyPriceCurrency": "PLN",
+                "duration": 12,
+                "maxMembers": 1
+            }
+            """;
+
+        // Attempt to create a membership plan with invalid max members
+        mockMvc.perform(post("/api/membership-plans/gyms/{gymId}", gymId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(invalidJsonRequest))
+                .andExpect(status().isBadRequest());
+
+        assertThat(membershipPlanRepository.count()).isEqualTo(0);
+    }
+
+    @Test
+    void createMembershipPlanWithEmptyMonthlyPriceCurrency() throws Exception {
+        String invalidJsonRequest = """
+            {
+                "name": "Plan",
+                "type": "BASIC",
+                "monthlyPriceAmount": 99.99,
+                "monthlyPriceCurrency": "",
+                "duration": 12,
+                "maxMembers": 1
+            }
+            """;
+
+        // Attempt to create a membership plan with invalid max members
+        mockMvc.perform(post("/api/membership-plans/gyms/{gymId}", gymId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(invalidJsonRequest))
+                .andExpect(status().isBadRequest());
+
+        assertThat(membershipPlanRepository.count()).isEqualTo(0);
+    }
+
+    @Test
+    void createMembershipPlanWithEmptyDuration() throws Exception {
+        String invalidJsonRequest = """
+            {
+                "name": "Plan",
+                "type": "BASIC",
+                "monthlyPriceAmount": 99.99,
+                "monthlyPriceCurrency": "PLN",
+                "duration": ,
+                "maxMembers": 1
+            }
+            """;
+
+        // Attempt to create a membership plan with invalid max members
+        mockMvc.perform(post("/api/membership-plans/gyms/{gymId}", gymId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(invalidJsonRequest))
+                .andExpect(status().isBadRequest());
+
+        assertThat(membershipPlanRepository.count()).isEqualTo(0);
+    }
+
+    @Test
+    void createMembershipPlanWithEmptyMaxMembers() throws Exception {
+        String invalidJsonRequest = """
+            {
+                "name": "Plan",
+                "type": "BASIC",
+                "monthlyPriceAmount": 99.99,
+                "monthlyPriceCurrency": "PLN",
+                "duration": 12,
+                "maxMembers": 0
+            }
+            """;
+
+        // Attempt to create a membership plan with invalid max members
+        mockMvc.perform(post("/api/membership-plans/gyms/{gymId}", gymId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(invalidJsonRequest))
+                .andExpect(status().isBadRequest());
+
+        assertThat(membershipPlanRepository.count()).isEqualTo(0);
+    }
+
+    @Test
     void updateExistingGym() throws Exception {
         // Create new membership plan
         String jsonRequest = """
