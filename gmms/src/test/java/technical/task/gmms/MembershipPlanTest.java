@@ -55,7 +55,8 @@ class MembershipPlanTest {
                         "00-000",
                         "Warsaw",
                         "Street 1"
-                )));
+                )
+        ));
         gymId = gym.getId();
     }
 
