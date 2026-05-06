@@ -107,7 +107,7 @@ class GymTest {
     }
 
     @Test
-    void createGymsWithSameName() throws Exception {
+    void createGymsWithSameNames() throws Exception {
         String jsonRequest = """
             {
                 "name": "Gym",
