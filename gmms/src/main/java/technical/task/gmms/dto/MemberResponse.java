@@ -3,6 +3,7 @@ package technical.task.gmms.dto;
 import technical.task.gmms.entities.Member;
 import technical.task.gmms.entities.MembershipStatus;
 
+import java.time.LocalDate;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -18,6 +19,7 @@ public class MemberResponse {
     private String address;
     private UUID membershipId;
     private String planName;
+    private LocalDate startDate;
     private MembershipStatus status;
     private String gymName;
 
@@ -35,6 +37,7 @@ public class MemberResponse {
         this.address = member.getAddress().getAddress();
         this.membershipId = member.getMembership().getId();
         this.planName = member.getMembership().getName();
+        this.startDate = member.getStartDate();
         this.status = member.getStatus();
         this.gymName = member.getMembership().getGym().getName();
     }
@@ -127,6 +130,14 @@ public class MemberResponse {
         this.planName = planName;
     }
 
+    public LocalDate getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(LocalDate startDate) {
+        this.startDate = startDate;
+    }
+
     public MembershipStatus getStatus() {
         return status;
     }
@@ -146,12 +157,12 @@ public class MemberResponse {
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof MemberResponse that)) return false;
-        return Objects.equals(getId(), that.getId()) && Objects.equals(getFirstName(), that.getFirstName()) && Objects.equals(getSecondName(), that.getSecondName()) && Objects.equals(getLastName(), that.getLastName()) && Objects.equals(getEmail(), that.getEmail()) && Objects.equals(getCountry(), that.getCountry()) && Objects.equals(getZipCode(), that.getZipCode()) && Objects.equals(getCity(), that.getCity()) && Objects.equals(getAddress(), that.getAddress()) && Objects.equals(getMembershipId(), that.getMembershipId()) && Objects.equals(getPlanName(), that.getPlanName()) && getStatus() == that.getStatus() && Objects.equals(getGymName(), that.getGymName());
+        return Objects.equals(getId(), that.getId()) && Objects.equals(getFirstName(), that.getFirstName()) && Objects.equals(getSecondName(), that.getSecondName()) && Objects.equals(getLastName(), that.getLastName()) && Objects.equals(getEmail(), that.getEmail()) && Objects.equals(getCountry(), that.getCountry()) && Objects.equals(getZipCode(), that.getZipCode()) && Objects.equals(getCity(), that.getCity()) && Objects.equals(getAddress(), that.getAddress()) && Objects.equals(getMembershipId(), that.getMembershipId()) && Objects.equals(getPlanName(), that.getPlanName()) && Objects.equals(getStartDate(), that.getStartDate()) && getStatus() == that.getStatus() && Objects.equals(getGymName(), that.getGymName());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getFirstName(), getSecondName(), getLastName(), getEmail(), getCountry(), getZipCode(), getCity(), getAddress(), getMembershipId(), getPlanName(), getStatus(), getGymName());
+        return Objects.hash(getId(), getFirstName(), getSecondName(), getLastName(), getEmail(), getCountry(), getZipCode(), getCity(), getAddress(), getMembershipId(), getPlanName(), getStartDate(), getStatus(), getGymName());
     }
 
     @Override
@@ -168,6 +179,7 @@ public class MemberResponse {
                 ", address='" + address + '\'' +
                 ", membershipId=" + membershipId +
                 ", planName='" + planName + '\'' +
+                ", startDate=" + startDate +
                 ", status=" + status +
                 ", gymName='" + gymName + '\'' +
                 '}';
