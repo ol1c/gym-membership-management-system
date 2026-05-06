@@ -10,15 +10,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import technical.task.gmms.dto.MembershipPlanRequest;
 import technical.task.gmms.entities.Address;
 import technical.task.gmms.entities.Gym;
 import technical.task.gmms.entities.MembershipType;
 import technical.task.gmms.repositories.GymRepository;
 import technical.task.gmms.repositories.MembershipPlanRepository;
 
-import java.math.BigDecimal;
-import java.util.Currency;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -47,6 +44,8 @@ class MembershipPlanTest {
     void setUp() {
         membershipPlanRepository.deleteAll();
         gymRepository.deleteAll();
+
+        // Create a gym for further tests
         Gym gym = gymRepository.save(new Gym(
                 UUID.randomUUID(),
                 "Gym",
@@ -62,19 +61,21 @@ class MembershipPlanTest {
 
     @Test
     void createAndRetrieveMembershipPlan() throws Exception {
-        MembershipPlanRequest request = new MembershipPlanRequest(
-                "Plan",
-                MembershipType.BASIC,
-                new BigDecimal("99.99"),
-                Currency.getInstance("PLN"),
-                12,
-                1
-        );
+        String jsonRequest = """
+            {
+                "name": "Plan",
+                "type": "BASIC",
+                "monthlyPriceAmount": 99.99,
+                "monthlyPriceCurrency": "PLN",
+                "duration": 12,
+                "maxMembers": 1
+            }
+            """;
 
         // Creating new membership plan
         MvcResult postResult = mockMvc.perform(post("/api/membership-plans/gyms/{gymId}", gymId)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
+                        .content(jsonRequest))
                 .andExpect(status().isCreated())
                 .andReturn();
 
@@ -99,19 +100,21 @@ class MembershipPlanTest {
 
     @Test
     void getMembershipPlanList() throws Exception {
-        MembershipPlanRequest request = new MembershipPlanRequest(
-                "Plan",
-                MembershipType.BASIC,
-                new BigDecimal("99.99"),
-                Currency.getInstance("PLN"),
-                12,
-                1
-        );
+        String jsonRequest = """
+            {
+                "name": "Plan",
+                "type": "BASIC",
+                "monthlyPriceAmount": 99.99,
+                "monthlyPriceCurrency": "PLN",
+                "duration": 12,
+                "maxMembers": 1
+            }
+            """;
 
         // Creating new membership plan
         MvcResult postResult = mockMvc.perform(post("/api/membership-plans/gyms/{gymId}", gymId)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
+                        .content(jsonRequest))
                 .andExpect(status().isCreated())
                 .andReturn();
 
@@ -123,7 +126,7 @@ class MembershipPlanTest {
 
         // Try to get list of membership plans
         // List should be a JSON array with first element id == savedMembershipPlanId
-        mockMvc.perform(get("/api/membership-plans/{id}", savedMembershipPlanId)
+        mockMvc.perform(get("/api/membership-plans/gyms/{gymId}", gymId)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
@@ -133,19 +136,21 @@ class MembershipPlanTest {
 
     @Test
     void createMembershipPlanWithMonthlyPriceMoreThan2Decimals() throws Exception {
-        MembershipPlanRequest invalidRequest = new MembershipPlanRequest(
-                "Plan",
-                MembershipType.BASIC,
-                new BigDecimal("99.999"),
-                Currency.getInstance("PLN"),
-                12,
-                1
-        );
+        String invalidJsonRequest = """
+            {
+                "name": "Plan",
+                "type": "BASIC",
+                "monthlyPriceAmount": 99.999,
+                "monthlyPriceCurrency": "PLN",
+                "duration": 12,
+                "maxMembers": 1
+            }
+            """;
 
         // Attempt to create a membership plan with invalid monthly price amount
         mockMvc.perform(post("/api/membership-plans/gyms/{gymId}", gymId)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(invalidRequest)))
+                        .content(invalidJsonRequest))
                 .andExpect(status().isBadRequest());
 
         assertThat(membershipPlanRepository.count()).isEqualTo(0);
@@ -153,19 +158,21 @@ class MembershipPlanTest {
 
     @Test
     void createMembershipPlanWithMonthlyPriceToBig() throws Exception {
-        MembershipPlanRequest invalidRequest = new MembershipPlanRequest(
-                "Plan",
-                MembershipType.BASIC,
-                new BigDecimal("999999999.99"),
-                Currency.getInstance("PLN"),
-                12,
-                1
-        );
+        String invalidJsonRequest = """
+            {
+                "name": "Plan",
+                "type": "BASIC",
+                "monthlyPriceAmount": 999999999.99,
+                "monthlyPriceCurrency": "PLN",
+                "duration": 12,
+                "maxMembers": 1
+            }
+            """;
 
         // Attempt to create a membership plan with invalid monthly price amount
         mockMvc.perform(post("/api/membership-plans/gyms/{gymId}", gymId)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(invalidRequest)))
+                        .content(invalidJsonRequest))
                 .andExpect(status().isBadRequest());
 
         assertThat(membershipPlanRepository.count()).isEqualTo(0);
@@ -173,19 +180,21 @@ class MembershipPlanTest {
 
     @Test
     void createMembershipPlanWithNegativeMonthlyPrice() throws Exception {
-        MembershipPlanRequest invalidRequest = new MembershipPlanRequest(
-                "Plan",
-                MembershipType.BASIC,
-                new BigDecimal("-99.99"),
-                Currency.getInstance("PLN"),
-                12,
-                1
-        );
+        String invalidJsonRequest = """
+            {
+                "name": "Plan",
+                "type": "BASIC",
+                "monthlyPriceAmount": -99.99,
+                "monthlyPriceCurrency": "PLN",
+                "duration": 12,
+                "maxMembers": 1
+            }
+            """;
 
         // Attempt to create a membership plan with invalid monthly price amount
         mockMvc.perform(post("/api/membership-plans/gyms/{gymId}", gymId)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(invalidRequest)))
+                        .content(invalidJsonRequest))
                 .andExpect(status().isBadRequest());
 
         assertThat(membershipPlanRepository.count()).isEqualTo(0);
@@ -193,19 +202,65 @@ class MembershipPlanTest {
 
     @Test
     void createMembershipPlanWithInvalidMonthlyPriceCurrency() throws Exception {
-        MembershipPlanRequest invalidRequest = new MembershipPlanRequest(
-                "Plan",
-                MembershipType.BASIC,
-                new BigDecimal("99.99"),
-                Currency.getInstance("BTC"),
-                12,
-                1
-        );
+        String invalidJsonRequest = """
+            {
+                "name": "Plan",
+                "type": "BASIC",
+                "monthlyPriceAmount": 99.99,
+                "monthlyPriceCurrency": "INV",
+                "duration": 12,
+                "maxMembers": 1
+            }
+            """;
 
-        // Attempt to create a membership plan with invalid monthly price amount
+        // Attempt to create a membership plan with invalid monthly price currency
         mockMvc.perform(post("/api/membership-plans/gyms/{gymId}", gymId)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(invalidRequest)))
+                        .content(invalidJsonRequest))
+                .andExpect(status().isBadRequest());
+
+        assertThat(membershipPlanRepository.count()).isEqualTo(0);
+    }
+
+    @Test
+    void createMembershipPlanWithNegativeDuration() throws Exception {
+        String invalidJsonRequest = """
+            {
+                "name": "Plan",
+                "type": "BASIC",
+                "monthlyPriceAmount": 99.99,
+                "monthlyPriceCurrency": "PLN",
+                "duration": -12,
+                "maxMembers": 1
+            }
+            """;
+
+        // Attempt to create a membership plan with invalid duration
+        mockMvc.perform(post("/api/membership-plans/gyms/{gymId}", gymId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(invalidJsonRequest))
+                .andExpect(status().isBadRequest());
+
+        assertThat(membershipPlanRepository.count()).isEqualTo(0);
+    }
+
+    @Test
+    void createMembershipPlanWithNegativeMaxMembers() throws Exception {
+        String invalidJsonRequest = """
+            {
+                "name": "Plan",
+                "type": "BASIC",
+                "monthlyPriceAmount": 99.99,
+                "monthlyPriceCurrency": "PLN",
+                "duration": 12,
+                "maxMembers": -1
+            }
+            """;
+
+        // Attempt to create a membership plan with invalid max members
+        mockMvc.perform(post("/api/membership-plans/gyms/{gymId}", gymId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(invalidJsonRequest))
                 .andExpect(status().isBadRequest());
 
         assertThat(membershipPlanRepository.count()).isEqualTo(0);
