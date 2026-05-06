@@ -7,11 +7,11 @@ Content-Type: application/json
 Accept: application/json
 
 {
-  "name": "FitCenter",
-  "phoneNumber": "123 456 789",
+  "name": "Gym",
+  "phoneNumber": "123456789",
   "country": "Poland",
-  "zipCode": "80-400",
-  "city": "Gdańsk",
+  "zipCode": "00-000",
+  "city": "Warsaw",
   "address": "Street 1"
 }
 
@@ -56,8 +56,8 @@ Accept: application/json
   "lastName": "Kowalski",
   "email": "jan.kowalski@example.com",
   "country": "Poland",
-  "zipCode": "80-400",
-  "city": "Gdańsk",
+  "zipCode": "00-000",
+  "city": "Warsaw",
   "address": "Street 10"
 }
 
