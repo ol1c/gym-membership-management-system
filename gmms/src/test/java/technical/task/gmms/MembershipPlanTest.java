@@ -265,4 +265,115 @@ class MembershipPlanTest {
 
         assertThat(membershipPlanRepository.count()).isEqualTo(0);
     }
+
+    @Test
+    void updateExistingGym() throws Exception {
+        // Create new membership plan
+        String jsonRequest = """
+            {
+                "name": "Plan",
+                "type": "BASIC",
+                "monthlyPriceAmount": 99.99,
+                "monthlyPriceCurrency": "PLN",
+                "duration": 12,
+                "maxMembers": 1
+            }
+            """;
+        MvcResult postResult = mockMvc.perform(post("/api/membership-plans/gyms/{gymId}", gymId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonRequest))
+                .andExpect(status().isCreated())
+                .andReturn();
+
+        String savedMembershipPlanId = objectMapper.readTree(postResult.getResponse().getContentAsString()).path("id").asText();
+
+        // Try to change the name of the gym
+        String updateJsonRequest = """
+            {
+                "name": "Plan 2",
+                "type": "BASIC",
+                "monthlyPriceAmount": 99.99,
+                "monthlyPriceCurrency": "PLN",
+                "duration": 12,
+                "maxMembers": 1
+            }
+            """;
+        mockMvc.perform(put("/api/membership-plans/{id}", savedMembershipPlanId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(updateJsonRequest))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(savedMembershipPlanId))
+                .andExpect(jsonPath("$.name").value("Plan 2"))
+                .andExpect(jsonPath("$.type").value(MembershipType.BASIC.toString()))
+                .andExpect(jsonPath("$.monthlyPrice").value("99.99 PLN"))
+                .andExpect(jsonPath("$.duration").value(12))
+                .andExpect(jsonPath("$.maxMembers").value(1))
+                .andExpect(jsonPath("$.gymId").value(gymId.toString()));
+
+        assertThat(membershipPlanRepository.count()).isEqualTo(1);
+    }
+
+    @Test
+    void updateNonExistingGym() throws Exception {
+        String savedMembershipPlanId = "nonExistingMembershipPlan";
+
+        // Try to change the name of the non-existing gym
+        String updateJsonRequest = """
+            {
+                "name": "Plan 2",
+                "type": "BASIC",
+                "monthlyPriceAmount": 99.99,
+                "monthlyPriceCurrency": "PLN",
+                "duration": 12,
+                "maxMembers": 1
+            }
+            """;
+        mockMvc.perform(put("/api/membership-plans/{id}", savedMembershipPlanId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(updateJsonRequest))
+                .andExpect(status().isBadRequest());
+
+        assertThat(membershipPlanRepository.count()).isEqualTo(0);
+    }
+
+    @Test
+    void deleteExistingGym() throws Exception {
+        // Create new membership plan
+        String jsonRequest = """
+            {
+                "name": "Plan",
+                "type": "BASIC",
+                "monthlyPriceAmount": 99.99,
+                "monthlyPriceCurrency": "PLN",
+                "duration": 12,
+                "maxMembers": 1
+            }
+            """;
+        MvcResult postResult = mockMvc.perform(post("/api/membership-plans/gyms/{gymId}", gymId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonRequest))
+                .andExpect(status().isCreated())
+                .andReturn();
+
+        String savedMembershipPlanId = objectMapper.readTree(postResult.getResponse().getContentAsString()).path("id").asText();
+
+        assertThat(membershipPlanRepository.count()).isEqualTo(1);
+
+        // Try to delete the gym
+        mockMvc.perform(delete("/api/membership-plans/{id}", savedMembershipPlanId))
+                .andExpect(status().isNoContent());
+
+        assertThat(membershipPlanRepository.count()).isEqualTo(0);
+    }
+
+    @Test
+    void deleteNonExistingGym() throws Exception {
+        String savedMembershipPlanId = "nonExistingMembershipPlan";
+
+        // Try to delete the non-existing gym
+        mockMvc.perform(delete("/api/membership-plans/{id}", savedMembershipPlanId))
+                .andExpect(status().isBadRequest());
+
+        assertThat(membershipPlanRepository.count()).isEqualTo(0);
+    }
 }
