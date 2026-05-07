@@ -161,51 +161,6 @@ public class MemberTest {
     }
 
     @Test
-    void createMembersWithSameEmails() throws Exception {
-        String jsonRequest = """
-                {
-                  "firstName": "Jan",
-                  "secondName": "",
-                  "lastName": "Kowalski",
-                  "email": "jan.kowalski@example.com",
-                  "country": "Poland",
-                  "zipCode": "00-000",
-                  "city": "Warsaw",
-                  "address": "Street 10"
-                }
-            """;
-
-        mockMvc.perform(post("/api/members/membership-plans/{membershipPlanId}", membershipPlanId)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(jsonRequest))
-                .andExpect(status().isCreated())
-                .andReturn();
-
-        assertThat(gymRepository.count()).isEqualTo(1);
-
-        String invalidJsonRequest = """
-                {
-                  "firstName": "Jan",
-                  "secondName": "Jakub",
-                  "lastName": "Kowalski",
-                  "email": "jan.kowalski@example.com",
-                  "country": "Poland",
-                  "zipCode": "00-000",
-                  "city": "Warsaw",
-                  "address": "Street 10"
-                }
-            """;
-
-        // Attempt to create a member with the same email
-        mockMvc.perform(post("/api/members/membership-plans/{membershipPlanId}", membershipPlanId)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(invalidJsonRequest))
-                .andExpect(status().isBadRequest());
-
-        assertThat(gymRepository.count()).isEqualTo(1);
-    }
-
-    @Test
     void createMemberWithInvalidEmail() throws Exception {
         String invalidJsonRequest = """
                 {

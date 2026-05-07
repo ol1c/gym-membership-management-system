@@ -117,12 +117,12 @@ public class MembershipPlan {
         this.members = members;
     }
 
-    public List<Member> getAllActiveMembers() {
-        return members.stream().filter(m -> m.getStatus() == MembershipStatus.ACTIVE).toList();
+    public long countAllActiveMembers() {
+        return members.stream().filter(m -> m.getStatus() == MembershipStatus.ACTIVE).count();
     }
 
     public void addMember(Member member) throws MembershipCapacityExceededException {
-        if (getAllActiveMembers().size() >= maxMembers) {
+        if (countAllActiveMembers() >= maxMembers) {
             throw new MembershipCapacityExceededException("Membership plan has reached its maximum capacity of " + maxMembers);
         }
         members.add(member);

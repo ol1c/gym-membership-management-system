@@ -71,3 +71,7 @@ Accept: application/json
 ### 7) Cancel a membership
 PATCH  {{host}}/api/members/{{memberId}}
 Accept: application/json
+
+### 8) Generate a report of monthly revenue for all gyms
+GET {{host}}/api/gyms/reports
+Accept: application/json

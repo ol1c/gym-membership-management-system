@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
 import technical.task.gmms.dto.GymRequest;
 import technical.task.gmms.dto.GymResponse;
+import technical.task.gmms.report.GymReport;
 import technical.task.gmms.services.GymService;
 
 import java.util.List;
@@ -65,5 +66,12 @@ public class GymResource {
     @ResponseBody
     public void deleteGym(@PathVariable UUID id) {
         gymService.deleteById(id);
+    }
+
+    @GetMapping("/reports")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public List<GymReport> createReport() {
+        return gymService.createReport();
     }
 }
