@@ -72,7 +72,7 @@ public class MemberTest {
                     Currency.getInstance("PLN")
                 ),
                 12,
-                2,
+                1,
                 gym
         ));
         membershipPlanId = membershipPlan.getId();
@@ -586,5 +586,113 @@ public class MemberTest {
                 .andExpect(status().isBadRequest());
 
         assertThat(memberRepository.count()).isEqualTo(0);
+    }
+
+    @Test
+    void addMoreThanMaxMembersToOnePlan() throws Exception {
+        // The testing membershipPlan has the maxMembers set to max 1 member
+
+        // Create first member
+        String firstJsonRequest = """
+                {
+                  "firstName": "Jan",
+                  "secondName": "",
+                  "lastName": "Kowalski",
+                  "email": "jan.kowalski@example.com",
+                  "country": "Poland",
+                  "zipCode": "00-000",
+                  "city": "Warsaw",
+                  "address": "Street 10"
+                }
+            """;
+
+        MvcResult postResult = mockMvc.perform(post("/api/members/membership-plans/{membershipPlanId}", membershipPlanId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(firstJsonRequest))
+                .andExpect(status().isCreated())
+                .andReturn();
+
+        assertThat(memberRepository.count()).isEqualTo(1);
+
+        // Create second member
+        String secondJsonRequest = """
+                {
+                  "firstName": "Jakub",
+                  "secondName": "",
+                  "lastName": "Nowak",
+                  "email": "jakub.nowak@example.com",
+                  "country": "Poland",
+                  "zipCode": "00-000",
+                  "city": "Warsaw",
+                  "address": "Street 10"
+                }
+            """;
+
+        mockMvc.perform(post("/api/members/membership-plans/{membershipPlanId}", membershipPlanId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(secondJsonRequest))
+                .andExpect(status().isConflict())
+                .andReturn();
+
+        assertThat(memberRepository.count()).isEqualTo(1);
+
+    }
+
+    @Test
+    void addNewMemberAfterCancellingPreviousOne() throws Exception {
+        // The testing membershipPlan has the maxMembers set to max 1 member
+
+        // Create first member
+        String firstJsonRequest = """
+                {
+                  "firstName": "Jan",
+                  "secondName": "",
+                  "lastName": "Kowalski",
+                  "email": "jan.kowalski@example.com",
+                  "country": "Poland",
+                  "zipCode": "00-000",
+                  "city": "Warsaw",
+                  "address": "Street 10"
+                }
+            """;
+
+        MvcResult postResult = mockMvc.perform(post("/api/members/membership-plans/{membershipPlanId}", membershipPlanId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(firstJsonRequest))
+                .andExpect(status().isCreated())
+                .andReturn();
+
+        String savedMemberId = objectMapper.readTree(postResult.getResponse().getContentAsString()).path("id").asText();
+
+        assertThat(memberRepository.count()).isEqualTo(1);
+
+        // Try to cancel the membership plan for the first member
+        mockMvc.perform(patch("/api/members/{id}", savedMemberId))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(savedMemberId))
+                .andExpect(jsonPath("$.status").value("CANCELLED"));
+
+        // Create second member
+        String secondJsonRequest = """
+                {
+                  "firstName": "Jakub",
+                  "secondName": "",
+                  "lastName": "Nowak",
+                  "email": "jakub.nowak@example.com",
+                  "country": "Poland",
+                  "zipCode": "00-000",
+                  "city": "Warsaw",
+                  "address": "Street 10"
+                }
+            """;
+
+        mockMvc.perform(post("/api/members/membership-plans/{membershipPlanId}", membershipPlanId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(secondJsonRequest))
+                .andExpect(status().isCreated())
+                .andReturn();
+
+        assertThat(memberRepository.count()).isEqualTo(2);
+
     }
 }
