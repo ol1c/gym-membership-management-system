@@ -2,6 +2,7 @@ package technical.task.gmms.services;
 
 import jakarta.persistence.EntityNotFoundException;
 import technical.task.gmms.entities.Gym;
+import technical.task.gmms.report.GymReport;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -25,4 +26,6 @@ public interface GymService {
     void delete(Gym gym);
 
     void deleteById(UUID id);
+
+    List<GymReport> createReport();
 }

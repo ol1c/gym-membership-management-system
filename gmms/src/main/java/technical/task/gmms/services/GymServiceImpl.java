@@ -6,11 +6,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import technical.task.gmms.entities.Address;
 import technical.task.gmms.entities.Gym;
+import technical.task.gmms.entities.MembershipPlan;
+import technical.task.gmms.report.GymCurrencyKey;
+import technical.task.gmms.report.GymReport;
 import technical.task.gmms.repositories.GymRepository;
 
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.UUID;
+import java.math.BigDecimal;
+import java.util.*;
 
 @Service
 @Transactional
@@ -76,5 +78,28 @@ public class GymServiceImpl implements GymService{
     @Override
     public void deleteById(UUID id) {
         gymRepository.deleteById(id);
+    }
+
+    @Override
+    public List<GymReport> createReport() {
+        List<Gym> gyms = gymRepository.findAll();
+        Map<GymCurrencyKey, BigDecimal> revenueMap = new HashMap<>();
+        for (Gym gym : gyms) {
+            List<MembershipPlan> membershipPlans = gym.getMembershipPlans();
+            for (MembershipPlan membershipPlan : membershipPlans) {
+                GymCurrencyKey key = new GymCurrencyKey(gym.getName(), membershipPlan.getMonthlyPrice().getCurrency());
+                BigDecimal revenue = membershipPlan.getMonthlyPrice().getAmount()
+                        .multiply(BigDecimal.valueOf(membershipPlan.countAllActiveMembers()));
+                revenueMap.merge(key, revenue, BigDecimal::add);
+            }
+        }
+        return revenueMap.entrySet().stream().map(entry -> new GymReport(
+                entry.getKey().gymName(),
+                entry.getValue(),
+                entry.getKey().currency()
+                ))
+                .sorted(Comparator.comparing(GymReport::gymName)
+                        .thenComparing(report -> report.currency().getCurrencyCode()))
+                .toList();
     }
 }
