@@ -56,3 +56,18 @@ To run the tests, execute the following Maven command in your terminal:
 ```bash
 ./mvnw test
 ```
+
+## Optional task
+
+The following additional task has been implemented:
+> **[Optional] Revenue report:** display total monthly revenue per gym, grouped by currency.
+> Monthly revenue = sum of monthly prices of all ACTIVE members for each gym.
+
+Tests for the report functionality can be found in `ReportTest.java`.
+
+**REST API Endpoint:**
+Generate a report of monthly revenue for all gyms
+`GET http://localhost:8080/api/gyms/reports`
+
+*(This request is also available in the `gmms/request.http` file)*
+
